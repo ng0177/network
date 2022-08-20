@@ -70,55 +70,38 @@ if normalization == 1:
 	validation_y = (validation_y - mean_train[-b:]) / std_train[-b:]
 	
 	test_x = (test_x - mean_train[:-b]) / std_train[:-b]
-
-
-	
    
 # -----------------------------------------------------------------------
 # Neural Network Model  -------------------------------------------------
 
-
+###
 n_features = train_x.shape[1]
-
-
 inputs  = keras.Input(shape=(n_features,))
-
 dense   = layers.Dense(64, activation="relu")
 x       = dense(inputs)
-
 x       = layers.Dense(64, activation="relu")(x)
 x       = layers.Dense(16, activation="relu")(x)
-
 outputs = layers.Dense(2)(x)
 
-
 model = keras.Model(inputs=inputs, outputs=outputs)
-model.summary()
-
-
 model.compile(optimizer='adam', loss='mse')
-
+model.summary()
+###
 
 # fit the model
 history = model.fit(train_x, train_y, batch_size=64, epochs=5, validation_data=(validation_x, validation_y))
-
 
 # evaluate the model
 error = model.evaluate(validation_x, validation_y, verbose=0)
 print('MSE: %.5f, RMSE: %.5f' % (error, sqrt(error)))
 
-
 res = model.predict(test_x)
-
 
 # Reconstruct output variables
 if normalization == 1:
  
 	res1 = res[:,0] * std_train[-b]   + mean_train[-b]
 	res2 = res[:,1] * std_train[-b+1] + mean_train[-b+1]
-	
-	
-
 
 
 # Plot Results  ---------------------------------------------------------
